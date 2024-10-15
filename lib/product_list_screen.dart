@@ -15,7 +15,9 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   List<String> productName = ['Apple', 'Orange','Lemon','cherry','Banana','Dragon Fruit','Strawberry','Pear','Mixed Fruit Basket'];
   List<String> productUnit = ['KG','KG','kG','KG','Dozen','kG','KG','kG','KG'];
+
   List<int> productPrice = [250,150,400,500,100,500,1000,200,850];
+
   List<String> productImage = [
     'https://images.pexels.com/photos/209439/pexels-photo-209439.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://images.pexels.com/photos/2294477/pexels-photo-2294477.jpeg?auto=compress&cs=tinysrgb&w=600',
@@ -26,14 +28,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
     'https://images.pexels.com/photos/1028435/pexels-photo-1028435.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://images.pexels.com/photos/28872580/pexels-photo-28872580/free-photo-of-rustic-wooden-bowl-of-fresh-pears.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://media.istockphoto.com/id/1395793331/photo/fresh-fruit-and-berries.jpg?b=1&s=612x612&w=0&k=20&c=lF2pi2-VRz8du9pUxyC64XL0QgvF_bE9uFZIzPtFSGo='
-
-
-
-
-
-
-
   ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +44,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
               style: TextStyle(color: Colors.white),
             ),
             onTap: () {},
-            // badgeAnimation: badges.BadgeAnimation.rotation(
-            //   animationDuration: Duration(seconds: 1),
-            //   colorChangeAnimationDuration: Duration(seconds: 1),
-            //   loopAnimation: false,
-            //   curve: Curves.fastOutSlowIn,
-            //   colorChangeAnimationCurve: Curves.easeInCubic,
-            // ),
             badgeAnimation: badges.BadgeAnimation.rotation(
                 animationDuration: Duration(seconds: 10)),
             child: Icon(Icons.shopping_cart),
