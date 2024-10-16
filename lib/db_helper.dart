@@ -5,31 +5,76 @@ import 'dart:io' as io;
 import 'package:shopping_cart/Models/cart_model.dart';
 
 
-
-class DBHelper{
+class DBHelper {
+  static final DBHelper _instance = DBHelper._internal();
   static Database? _db;
 
-  Future<Database?> get db async{
-    if(_db != null){
-      return _db!;
-    }
-    _db = await initDatabase();
+  factory DBHelper() {
+    return _instance;
   }
-  initDatabase() async{
+
+  DBHelper._internal();
+
+  Future<Database?> get db async {
+    if (_db != null) return _db!;
+    _db = await initDatabase();
+    return _db;
+  }
+
+  Future<Database> initDatabase() async {
     io.Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, 'cart.db');
-    var db = await openDatabase(path,version:1,onCreate: _onCreate);
-    return db;
+    return await openDatabase(path, version: 1, onCreate: _onCreate);
+  }
 
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE cart (
+        id INTEGER PRIMARY KEY,
+        productId VARCHAR UNIQUE,
+        productName TEXT,
+        initialPrice INTEGER,
+        productPrice INTEGER,
+        quantity INTEGER,
+        unit TEXT,
+        image TEXT
+      )
+    ''');
   }
-  _onCreate (Database db , int version )async{
-    await db
-        .execute('CREATE TABLE cart (id INTEGER PRIMARY KEY , productId VARCHAR UNIQUE,productName TEXT,initialPrice INTEGER, productPrice INTEGER , quantity INTEGER, unit TEXT , image TEXT )');
-  }
-  Future<Cart> insert(Cart cart) async{
+
+  Future<Cart> insert(Cart cart) async {
     var dbClient = await db;
     await dbClient!.insert('cart', cart.toMap());
     return cart;
   }
 
+  Future<List<Cart>> getCartList() async {
+    var dbClient = await db;
+    final List<Map<String, dynamic>> queryResult = await dbClient!.query('cart');
+    return queryResult.map((e) => Cart.fromMap(e)).toList();
+  }
+
+  Future<int> delete(int id) async {
+    var dbClient = await db;
+    return await dbClient!.delete(
+      'cart',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> update(Cart cart) async {
+    var dbClient = await db;
+    return await dbClient!.update(
+      'cart',
+      cart.toMap(),
+      where: 'id = ?',
+      whereArgs: [cart.id],
+    );
+  }
+
+  Future<void> close() async {
+    var dbClient = await db;
+    await dbClient?.close();
+  }
 }
